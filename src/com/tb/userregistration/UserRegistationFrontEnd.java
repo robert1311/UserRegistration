@@ -12,13 +12,8 @@ public class UserRegistationFrontEnd {
 		boolean keepGoing = true;
 		int userOption;
 		do {
-			System.out.println("\nHello, please select a User option.\n" + 
-					"1) Add User\n" + 
-					"2) Display All Users\n" + 
-					"3) Display One User by ID\n" + 
-					"4) Update User\n" + 
-					"5) Delete User\n" +
-					"6) Exit\n");
+			System.out.println("\nHello, please select a User option.\n" + "1) Add User\n" + "2) Display All Users\n"
+					+ "3) Display One User by ID\n" + "4) Update User\n" + "5) Delete User\n" + "6) Exit\n");
 			userOption = sc.nextInt();
 			sc.nextLine();
 
@@ -54,8 +49,8 @@ public class UserRegistationFrontEnd {
 		String email = "";
 		do {
 			hasErrors = false;
-			if(!firstName.isBlank()) {
-				//skip
+			if (!firstName.isBlank()) {
+				// skip
 			} else {
 				System.out.println("Enter First Name");
 				firstName = sc.nextLine();
@@ -64,8 +59,8 @@ public class UserRegistationFrontEnd {
 					continue;
 				}
 			}
-			if(!lastName.isBlank()) {
-				//skip
+			if (!lastName.isBlank()) {
+				// skip
 			} else {
 				System.out.println("Enter Last Name");
 				lastName = sc.nextLine();
@@ -74,8 +69,8 @@ public class UserRegistationFrontEnd {
 					continue;
 				}
 			}
-			if(!email.isBlank()) {
-				//skip
+			if (!email.isBlank()) {
+				// skip
 			} else {
 				System.out.println("Enter Email");
 				email = sc.nextLine();
@@ -88,30 +83,39 @@ public class UserRegistationFrontEnd {
 		dao.addUser(newUser);
 		System.out.println("New User Added!");
 	}
-	
+
 	public static void displayAllUsers() {
 		List<UserProfile> users = dao.getAllUsers();
-		for(UserProfile user : users) {
-			System.out.println(user.getUserProfileId() + ") "
-					+ user.getFirstName() + " " + user.getLastName() +"\n"
-							+ " - " + user.getEmail());
+		for (UserProfile user : users) {
+			System.out.println(user.getUserProfileId() + ") " + user.getFirstName() + " " + user.getLastName() + "\n"
+					+ " - " + user.getEmail());
 		}
 	}
-	
+
 	public static void displayOneUser() {
 		System.out.println("Enter User ID to display User.");
 		int id = sc.nextInt();
 		UserProfile user = dao.getUser(id);
-		System.out.println(user.getUserProfileId() + ") "
-				+ user.getFirstName() + " " + user.getLastName() +"\n"
-						+ " - " + user.getEmail());	
-		}
-	
-	
+		System.out.println(user.getUserProfileId() + ") " + user.getFirstName() + " " + user.getLastName() + "\n"
+				+ " - " + user.getEmail());
+	}
+
 	public static void displayRemoveUserPrompt() {
-		System.out.println("Enter User ID to delete User.");
-		int id = sc.nextInt();
-		dao.deleteUser(id);
-		System.out.println("User Removed!");
+
+		int id;
+		boolean isValid;
+		do {
+			isValid = false;
+			if (dao.getAllUsers().size() <= 0) {
+				break;
+			}
+			System.out.println("Enter an existing User ID to delete User.");
+			id = sc.nextInt();
+			isValid = dao.deleteUser(id);
+			if (isValid) {
+				System.out.println("User Removed!");
+			}
+		} while (!isValid);
+
 	}
 }
