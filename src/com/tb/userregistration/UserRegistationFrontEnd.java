@@ -1,5 +1,6 @@
 package com.tb.userregistration;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class UserRegistationFrontEnd {
@@ -16,7 +17,8 @@ public class UserRegistationFrontEnd {
 					"2) Display All Users\n" + 
 					"3) Display One User by ID\n" + 
 					"4) Update User\n" + 
-					"5) Delete User\n");
+					"5) Delete User\n" +
+					"6) Exit\n");
 			userOption = sc.nextInt();
 			sc.nextLine();
 
@@ -25,19 +27,23 @@ public class UserRegistationFrontEnd {
 				addUserPrompt();
 				break;
 			case 2:
-				System.out.println("Display All Users");
+				displayAllUsers();
 				break;
 			case 3:
-				System.out.println("Display One User");
+				displayOneUser();
 				break;
 			case 4:
 				System.out.println("Update User");
 				break;
 			case 5:
-				System.out.println("Delete User");
+				displayRemoveUserPrompt();
+				break;
+			case 6:
+				keepGoing = false;
 				break;
 			}
-		} while (keepGoing = true);
+		} while (keepGoing);
+		System.out.println("Good Bye!");
 	}
 
 	public static void addUserPrompt() {
@@ -79,8 +85,33 @@ public class UserRegistationFrontEnd {
 				}
 			}
 		} while (hasErrors);
-		newUser.setUserProfileId(newUser.getUserCount() + 1);
 		dao.addUser(newUser);
 		System.out.println("New User Added!");
+	}
+	
+	public static void displayAllUsers() {
+		List<UserProfile> users = dao.getAllUsers();
+		for(UserProfile user : users) {
+			System.out.println(user.getUserProfileId() + ") "
+					+ user.getFirstName() + " " + user.getLastName() +"\n"
+							+ " - " + user.getEmail());
+		}
+	}
+	
+	public static void displayOneUser() {
+		System.out.println("Enter User ID to display User.");
+		int id = sc.nextInt();
+		UserProfile user = dao.getUser(id);
+		System.out.println(user.getUserProfileId() + ") "
+				+ user.getFirstName() + " " + user.getLastName() +"\n"
+						+ " - " + user.getEmail());	
+		}
+	
+	
+	public static void displayRemoveUserPrompt() {
+		System.out.println("Enter User ID to delete User.");
+		int id = sc.nextInt();
+		dao.deleteUser(id);
+		System.out.println("User Removed!");
 	}
 }

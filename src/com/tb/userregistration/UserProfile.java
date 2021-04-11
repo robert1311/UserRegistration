@@ -5,7 +5,6 @@ public class UserProfile {
 	private String firstName;
 	private String lastName;
 	private String email;
-	private int userCount = 0;
 
 	/**
 	 * @return the userProfileId
@@ -83,13 +82,5 @@ public class UserProfile {
 
 	}
 
-	/**
-	 * @return the userCount
-	 */
-	public int getUserCount() {
-		return userCount;
-	}
-	
-	
 
 }

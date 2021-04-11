@@ -6,8 +6,11 @@ import java.util.List;
 public class UserProfileDao {
 
 	ArrayList<UserProfile> users = new ArrayList<>();
+	int userId = 0;
 	
 	public void addUser(UserProfile user) {
+		user.setUserProfileId(userId);
+		userId++;
 		users.add(user);
 	}
 	
