@@ -30,7 +30,9 @@ public class UserProfileDao {
 	}
 
 	public void updateUser(UserProfile user) {
-		users.add(user);
+		
+		users.remove(user.getUserProfileId());
+		users.add(user.getUserProfileId(), user);
 	}
 
 	public boolean deleteUser(int userId) {

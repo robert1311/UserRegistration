@@ -28,7 +28,7 @@ public class UserRegistationFrontEnd {
 				displayOneUser();
 				break;
 			case 4:
-				System.out.println("Update User");
+				displayUpdateUserProfile();
 				break;
 			case 5:
 				displayRemoveUserPrompt();
@@ -42,45 +42,9 @@ public class UserRegistationFrontEnd {
 	}
 
 	public static void addUserPrompt() {
-		UserProfile newUser = new UserProfile();
-		boolean hasErrors;
-		String firstName = "";
-		String lastName = "";
-		String email = "";
-		do {
-			hasErrors = false;
-			if (!firstName.isBlank()) {
-				// skip
-			} else {
-				System.out.println("Enter First Name");
-				firstName = sc.nextLine();
-				hasErrors = !newUser.setFirstName(firstName);
-				if (hasErrors) {
-					continue;
-				}
-			}
-			if (!lastName.isBlank()) {
-				// skip
-			} else {
-				System.out.println("Enter Last Name");
-				lastName = sc.nextLine();
-				hasErrors = !newUser.setLastName(lastName);
-				if (hasErrors) {
-					continue;
-				}
-			}
-			if (!email.isBlank()) {
-				// skip
-			} else {
-				System.out.println("Enter Email");
-				email = sc.nextLine();
-				hasErrors = !newUser.setEmail(email);
-				if (hasErrors) {
-					continue;
-				}
-			}
-		} while (hasErrors);
-		dao.addUser(newUser);
+		UserProfile user = new UserProfile();
+		user = enterUserInfoTemplate(user);
+		dao.addUser(user);
 		System.out.println("New User Added!");
 	}
 
@@ -92,14 +56,38 @@ public class UserRegistationFrontEnd {
 		}
 	}
 
-	public static void displayOneUser() {
+	public static UserProfile displayOneUser() {
 		System.out.println("Enter User ID to display User.");
 		int id = sc.nextInt();
 		UserProfile user = dao.getUser(id);
 		System.out.println(user.getUserProfileId() + ") " + user.getFirstName() + " " + user.getLastName() + "\n"
 				+ " - " + user.getEmail());
+		return user;
 	}
 
+	public static void displayUpdateUserProfile() {
+		boolean isInvalidId;
+		UserProfile user;
+		do {
+			isInvalidId = false;
+			user = displayOneUser();
+			if(user == null) {
+				isInvalidId = true;
+			}
+		} while (isInvalidId);
+		sc.nextLine();
+		System.out.println("Update this User? (y-Yes n-No)");
+		String update = sc.nextLine();
+		if(update.equalsIgnoreCase("y")) {
+			System.out.println("Press enter with blank entry to leave current "
+					+ "info");
+			user = enterUserInfoTemplate(user);
+			dao.updateUser(user);
+			System.out.println("User updated!");
+		}
+		
+	}
+	
 	public static void displayRemoveUserPrompt() {
 
 		int id;
@@ -117,5 +105,66 @@ public class UserRegistationFrontEnd {
 			}
 		} while (!isValid);
 
+	}
+	
+	public static UserProfile enterUserInfoTemplate(UserProfile user) {
+		boolean hasErrors;
+		String currFirstName = user.getFirstName();
+		String currLastName = user.getLastName();
+		String currEmail = user.getEmail();
+		String tempFirstName = "";
+		String tempLastName = "";
+		String tempEmail = "";
+		String disFirstName = "";
+		
+		do {
+			hasErrors = false;
+			if (!tempFirstName.isBlank()) {
+				// skip
+			} else {
+				String currFS = currFirstName != null ? currFirstName : "";
+				System.out.println("Enter First Name\n" 
+						+ "Current first name: " + currFS);
+				tempFirstName = sc.nextLine();
+				if(tempFirstName.isBlank() & currFirstName != null) {
+					tempFirstName = currFirstName;
+				}
+				hasErrors = !user.setFirstName(tempFirstName);
+				if (hasErrors) {
+					continue;
+				}
+			}
+			if (!tempLastName.isBlank()) {
+				// skip
+			} else {
+				String currLS = currLastName != null ? currLastName : "";
+				System.out.println("Enter Last Name\n"
+						+ "Current last name: " + currLS);
+				tempLastName = sc.nextLine();
+				if(tempLastName.isBlank() & currLastName != null) {
+					tempLastName = currLastName;
+				}
+				hasErrors = !user.setLastName(tempLastName);
+				if (hasErrors) {
+					continue;
+				}
+			}
+			if (!tempEmail.isBlank()) {
+				// skip
+			} else {
+				String currE = currEmail != null ? currEmail : "";
+				System.out.println("Enter Email\n"
+						+ "Current email: " + currE);
+				tempEmail = sc.nextLine();
+				if(tempEmail.isBlank() & currEmail != null) {
+					tempEmail = currEmail;
+				}
+				hasErrors = !user.setEmail(tempEmail);
+				if (hasErrors) {
+					continue;
+				}
+			}
+		} while (hasErrors);
+		return user;
 	}
 }
