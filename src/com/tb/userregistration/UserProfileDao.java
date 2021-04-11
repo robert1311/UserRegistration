@@ -30,16 +30,17 @@ public class UserProfileDao {
 	}
 
 	public void updateUser(UserProfile user) {
-		
-		users.remove(user.getUserProfileId());
-		users.add(user.getUserProfileId(), user);
+		int index = users.indexOf(user);
+		users.remove(users.indexOf(user));
+		users.add(index, user);
 	}
 
 	public boolean deleteUser(int userId) {
-		if (userId >= users.size() | userId < 0) {
+		UserProfile user = getUser(userId);
+		if (user == null) {
 			return false;
 		} else {
-			users.remove(userId);
+			users.remove(user);
 			return true;
 		}
 	}
