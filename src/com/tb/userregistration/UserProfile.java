@@ -5,6 +5,7 @@ public class UserProfile {
 	private String firstName;
 	private String lastName;
 	private String email;
+	private String password;
 
 	/**
 	 * @return the userProfileId
@@ -82,5 +83,26 @@ public class UserProfile {
 
 	}
 
+	/**
+	 * @return the password
+	 */
+	public String getPassword() {
+		return password;
+	}
+
+	/**
+	 * @param password the password to set
+	 */
+	public boolean setPassword(String password) {
+		if (!password.isBlank()) {
+			this.password = password;
+			return true;
+		} else {
+			System.out.println("Password can't be blank");
+			return false;
+		}
+	}
+
+	
 
 }

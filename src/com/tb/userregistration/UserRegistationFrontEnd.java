@@ -52,7 +52,7 @@ public class UserRegistationFrontEnd {
 		List<UserProfile> users = dao.getAllUsers();
 		for (UserProfile user : users) {
 			System.out.println(user.getUserProfileId() + ") " + user.getFirstName() + " " + user.getLastName() + "\n"
-					+ " - " + user.getEmail());
+					+ " - " + user.getEmail() + "\n -" + user.getPassword());
 		}
 	}
 
@@ -61,7 +61,7 @@ public class UserRegistationFrontEnd {
 		int id = sc.nextInt();
 		UserProfile user = dao.getUser(id);
 		System.out.println(user.getUserProfileId() + ") " + user.getFirstName() + " " + user.getLastName() + "\n"
-				+ " - " + user.getEmail());
+				+ " - " + user.getEmail() + "\n -" + user.getPassword());
 		return user;
 	}
 
@@ -71,23 +71,22 @@ public class UserRegistationFrontEnd {
 		do {
 			isInvalidId = false;
 			user = displayOneUser();
-			if(user == null) {
+			if (user == null) {
 				isInvalidId = true;
 			}
 		} while (isInvalidId);
 		sc.nextLine();
 		System.out.println("Update this User? (y-Yes n-No)");
 		String update = sc.nextLine();
-		if(update.equalsIgnoreCase("y")) {
-			System.out.println("Press enter with blank entry to leave current "
-					+ "info");
+		if (update.equalsIgnoreCase("y")) {
+			System.out.println("Press enter with blank entry to leave current " + "info");
 			user = enterUserInfoTemplate(user);
 			dao.updateUser(user);
 			System.out.println("User updated!");
 		}
-		
+
 	}
-	
+
 	public static void displayRemoveUserPrompt() {
 
 		int id;
@@ -106,27 +105,27 @@ public class UserRegistationFrontEnd {
 		} while (!isValid);
 
 	}
-	
+
 	public static UserProfile enterUserInfoTemplate(UserProfile user) {
 		boolean hasErrors;
 		String currFirstName = user.getFirstName();
 		String currLastName = user.getLastName();
 		String currEmail = user.getEmail();
+		String currPassword = user.getPassword();
 		String tempFirstName = "";
 		String tempLastName = "";
 		String tempEmail = "";
-		String disFirstName = "";
-		
+		String tempPassword = "";
+
 		do {
 			hasErrors = false;
 			if (!tempFirstName.isBlank()) {
 				// skip
 			} else {
 				String currFS = currFirstName != null ? currFirstName : "";
-				System.out.println("Enter First Name\n" 
-						+ "Current first name: " + currFS);
+				System.out.println("Enter First Name\n" + "Current first name: " + currFS);
 				tempFirstName = sc.nextLine();
-				if(tempFirstName.isBlank() & currFirstName != null) {
+				if (tempFirstName.isBlank() & currFirstName != null) {
 					tempFirstName = currFirstName;
 				}
 				hasErrors = !user.setFirstName(tempFirstName);
@@ -138,10 +137,9 @@ public class UserRegistationFrontEnd {
 				// skip
 			} else {
 				String currLS = currLastName != null ? currLastName : "";
-				System.out.println("Enter Last Name\n"
-						+ "Current last name: " + currLS);
+				System.out.println("Enter Last Name\n" + "Current last name: " + currLS);
 				tempLastName = sc.nextLine();
-				if(tempLastName.isBlank() & currLastName != null) {
+				if (tempLastName.isBlank() & currLastName != null) {
 					tempLastName = currLastName;
 				}
 				hasErrors = !user.setLastName(tempLastName);
@@ -153,15 +151,37 @@ public class UserRegistationFrontEnd {
 				// skip
 			} else {
 				String currE = currEmail != null ? currEmail : "";
-				System.out.println("Enter Email\n"
-						+ "Current email: " + currE);
+				System.out.println("Enter Email\n" + "Current email: " + currE);
 				tempEmail = sc.nextLine();
-				if(tempEmail.isBlank() & currEmail != null) {
+				if (tempEmail.isBlank() & currEmail != null) {
 					tempEmail = currEmail;
 				}
 				hasErrors = !user.setEmail(tempEmail);
 				if (hasErrors) {
 					continue;
+				}
+			}
+			if (!tempPassword.isBlank()) {
+				// skip
+			} else {
+				String currP = currPassword != null ? currPassword : "";
+				System.out.println("Enter Password\n" + "Current Password: " + currP);
+				tempPassword = sc.nextLine();
+				if (tempPassword.isBlank() & currPassword != null) {
+					tempPassword = currPassword;
+					continue;
+				}
+				System.out.println("Re-type password to confirm");
+				String confirmPW = sc.nextLine();
+				if (!tempPassword.equals(confirmPW)) {
+					System.out.println("Passwords must match. Please try again");
+					hasErrors = true;
+					tempPassword = "";
+				} else {
+					hasErrors = !user.setPassword(tempPassword);
+					if (hasErrors) {
+						continue;
+					}
 				}
 			}
 		} while (hasErrors);
